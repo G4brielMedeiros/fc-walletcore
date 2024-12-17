@@ -25,6 +25,17 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	db.Exec("CREATE TABLE IF NOT EXISTS clients (id varchar(255) PRIMARY KEY, name varchar(255), email varchar(255), created_at date)")
+	db.Exec("CREATE TABLE IF NOT EXISTS accounts (id varchar(255) PRIMARY KEY, client_id varchar(255), balance int, created_at date)")
+	db.Exec("CREATE TABLE IF NOT EXISTS transactions (id varchar(255) PRIMARY KEY, account_id_from varchar(255), account_id_to varchar(255), amount int, created_at date)")
+
+	db.Exec("INSERT IGNORE INTO foobars (id, name, email, created_at) VALUES ('777', 12345)")
+	db.Exec("INSERT IGNORE INTO clients (id, name, email, created_at) VALUES ('1', 'John Doe', 'john.doe@example.com', '2023-01-01')")
+	db.Exec("INSERT IGNORE INTO clients (id, name, email, created_at) VALUES ('2', 'Jane Smith', 'jane.smith@example.com', '2023-01-02')")
+
+	db.Exec("INSERT IGNORE INTO accounts (id, client_id, balance, created_at) VALUES ('11', '1', 5000, '2023-01-01')")
+	db.Exec("INSERT IGNORE INTO accounts (id, client_id, balance, created_at) VALUES ('22', '2', 7000, '2023-01-02')")
+
 	defer db.Close()
 
 	configMap := ckafka.ConfigMap{

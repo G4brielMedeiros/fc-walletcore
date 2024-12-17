@@ -1,13 +1,15 @@
 version: '3'
 
 services:
-  goapp: 
-    build: .
+  goapp:
+    hostname: walletcore
+    build: ./walletcore
     platform: linux/amd64
     volumes:
-      - .:/app
+      - ./walletcore:/app
     ports:
       - 8080:8080
+    command: [ "go", "run", "cmd/walletcore/main.go" ]
 
   mysql:
     image: mysql:5.7
@@ -37,9 +39,9 @@ services:
     depends_on:
       - zookeeper
     ports:
-    # Exposes 9092 for external connections to the broker
-    # Use kafka:29092 for connections internal on the docker network
-    # See https://rmoff.net/2018/08/02/kafka-listeners-explained/ for details
+      # Exposes 9092 for external connections to the broker
+      # Use kafka:29092 for connections internal on the docker network
+      # See https://rmoff.net/2018/08/02/kafka-listeners-explained/ for details
       - '9092:9092'
     environment:
       TZ: Sao_Paulo/Brazil
@@ -70,4 +72,3 @@ services:
       CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
       CONFLUENT_METRICS_TOPIC_REPLICATION: 1
       PORT: 9021
-  
